@@ -24,8 +24,8 @@ cd developer_exercises
 bundle install
 ```
 
-The program expects to find `ENV["NB_API_TOKEN"]` in order to authenticate. You can add it to the environment on startup:
+The program expects to find `ENV["NB_API_TOKEN"]` and `ENV["NB_SLUG"]` in order to authenticate. You can add them to the environment on startup:
 
 ```
-NB_API_TOKEN=<token> ruby developer_exercises/app/main.rb
+NB_API_TOKEN=<token> NB_SLUG=<slug> ruby developer_exercises/app/main.rb
 ```
