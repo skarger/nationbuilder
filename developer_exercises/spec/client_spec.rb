@@ -44,8 +44,10 @@ describe Client do
                              resource: resource,
                              payload: expected_payload)
 
-      expect(a_request(:post, create_path).with(body: expected_payload))
-        .to have_been_made.once
+      expect(a_request(:post, create_path).with(
+        body: JSON.generate(expected_payload),
+        headers: { "Content-Type" => "application/json" }
+      )).to have_been_made.once
     end
   end
 end

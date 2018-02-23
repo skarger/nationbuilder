@@ -16,7 +16,7 @@ describe PathProvider do
     describe "events" do
       it "returns the expected URL" do
         expect(path_provider.index(:events)).to eq(
-          "#{slug}.nationbuilder.com/api/v1/sites/#{slug}/pages/events?" \
+          "https://#{slug}.nationbuilder.com/api/v1/sites/#{slug}/pages/events?" \
           "access_token=#{api_token}"
         )
       end
@@ -27,7 +27,7 @@ describe PathProvider do
     describe "events" do
       it "returns the expected URL" do
         expect(path_provider.create(:events)).to eq(
-          "#{slug}.nationbuilder.com/api/v1/sites/#{slug}/pages/events?" \
+          "https://#{slug}.nationbuilder.com/api/v1/sites/#{slug}/pages/events?" \
           "access_token=#{api_token}"
         )
       end
