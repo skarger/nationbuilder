@@ -5,7 +5,7 @@ require_relative "./helpers.rb"
 Helpers.require_files
 
 class App < Roda
-  plugin :render, views: "app/views"
+  plugin :render, views: "views"
 
   def event(response)
     data = JSON.parse(response.body)
@@ -31,11 +31,15 @@ class App < Roda
           # fetch events, show the first one
           response = Client.index(path_provider: @path_provider, resource: :events)
           event = event(response)
-          @id = event["id"]
-          @name = event["name"]
-          @intro = event["intro"]
 
-          render("event", locals: { id: @id, name: @name, intro: @intro })
+          render("event", locals: {
+            id: event["id"],
+            name: event["name"],
+            intro: event["intro"],
+            status: event["status"],
+            start_time: event["start_time"],
+            end_time: event["end_time"]
+          })
         end
 
         # POST /event request
@@ -47,7 +51,8 @@ class App < Roda
           response = Client.update(path_provider: @path_provider,
                                    resource: :events,
                                    id: event_id,
-                                   paylod: params)
+                                   payload: params)
+
           r.redirect
         end
       end
