@@ -1,4 +1,5 @@
 require 'faraday'
+require 'pry'
 
 module Client
   module_function
