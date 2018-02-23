@@ -25,5 +25,27 @@ describe Client do
 
       expect(a_request(:post, create_path)).to have_been_made.once
     end
+
+    it "defaults payload to {}" do
+      stub_request(:post, create_path)
+
+      client = Client.create(path_provider: path_provider, resource: resource)
+
+      expect(a_request(:post, create_path).with(body: {})).to have_been_made.once
+    end
+
+    it "accepts a payload" do
+      stub_request(:post, create_path)
+
+      expected_payload = {
+        "key" => "value"
+      }
+      client = Client.create(path_provider: path_provider,
+                             resource: resource,
+                             payload: expected_payload)
+
+      expect(a_request(:post, create_path).with(body: expected_payload))
+        .to have_been_made.once
+    end
   end
 end
