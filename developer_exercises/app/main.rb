@@ -18,20 +18,25 @@ def main(logger: Logger.new($stderr))
   report_configuration_error_and_exit(logger) if environment_invalid?
 
   if run_live_program?
-    path_provider = PathProvider.new(slug: ENV['NB_SLUG'], api_token: ENV['NB_API_TOKEN'])
+    path_provider = PathProvider.new(slug: ENV['NB_SLUG'],
+                                     api_token: ENV['NB_API_TOKEN'])
     logger.info("Fetching existing events")
-    response = get_events(path_provider)
+    reponse = Client.index(path_provider: path_provider, resource: :events)
     report_failed_request_and_exit(logger) unless response.status == 200
 
     logger.info("Deleting existing events")
     event_ids_names(response).each do |id, name|
       logger.info("Deleting event #{id}: #{name}")
-      response = delete_event(path_provider, id)
+      response = Client.delete(path_provider: path_provider,
+                               resource: :events,
+                               id: id)
       report_failed_request_and_exit(logger) unless response.status == 204
     end
 
     logger.info("Creating event")
-    response = create_event(path_provider)
+    response = Client.create(path_provider: path_provider,
+                             resource: :events,
+                             payload: event)
     report_failed_request_and_exit(logger) unless response.status == 200
 
     event_id, event_name = event_id_name(JSON.parse(response.body)["event"])
@@ -64,18 +69,6 @@ def report_configuration_error_and_exit(logger)
     logger.warn("ENV['NB_SLUG'] unset. Exiting.")
   end
   exit CONFIGURATION_ERROR
-end
-
-def get_events(path_provider)
-  Client.index(path_provider: path_provider, resource: :events)
-end
-
-def delete_event(path_provider, id)
-  Client.delete(path_provider: path_provider, resource: :events, id: id)
-end
-
-def create_event(path_provider)
-  Client.create(path_provider: path_provider, resource: :events, payload: event)
 end
 
 def event_ids_names(response)
