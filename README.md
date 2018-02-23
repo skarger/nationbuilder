@@ -32,7 +32,7 @@ The program expects to find `ENV["NB_API_TOKEN"]` and `ENV["NB_SLUG"]` in order 
 NB_API_TOKEN=<token> NB_SLUG=<slug> ruby developer_exercises/app/main.rb
 ```
 
-Then there is a web app used to connect user input to the API.
+Then there is a web app used to connect user input to the API. You can view it locally at [http://localhost:3000](http://localhost:3000) after starting it up as described below.
 
 To run the web app without code reloading:
 
@@ -47,8 +47,6 @@ bundle exec rerun -- rackup app/config.ru --port 3000
 ```
 
 This uses the [Rerun](https://github.com/alexch/rerun) gem to automatically restart the app when files change.
-
-Then view [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Development
 
