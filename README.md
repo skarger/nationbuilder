@@ -29,3 +29,13 @@ The program expects to find `ENV["NB_API_TOKEN"]` and `ENV["NB_SLUG"]` in order 
 ```
 NB_API_TOKEN=<token> NB_SLUG=<slug> ruby developer_exercises/app/main.rb
 ```
+
+### Development
+
+For the developer exercises, to run the tests:
+
+```
+cd developer_exercises
+
+rspec
+```
