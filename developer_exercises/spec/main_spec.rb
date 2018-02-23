@@ -5,6 +5,7 @@ describe "main" do
 
   it "returns a successful exit code" do
     ENV['NB_API_TOKEN'] = 'abc'
+    ENV['NB_SLUG'] = 'mynation'
     expect(main(logger: logger)).to eq(0)
   end
 
@@ -20,11 +21,23 @@ describe "main" do
 
   it "errors out if no API token set" do
     ENV['NB_API_TOKEN'] = nil
+    ENV['NB_SLUG'] = 'mynation'
     allow(logger).to receive(:warn)
     allow(Logger).to receive(:new).with($stderr).and_return(logger)
 
     expect(main(logger: logger)).to eq(1)
 
     expect(logger).to have_received(:warn).with("ENV['NB_API_TOKEN'] unset. Exiting.")
+  end
+
+  it "errors out if no nation slug set" do
+    ENV['NB_API_TOKEN'] = 'abc'
+    ENV['NB_SLUG'] = nil
+    allow(logger).to receive(:warn)
+    allow(Logger).to receive(:new).with($stderr).and_return(logger)
+
+    expect(main(logger: logger)).to eq(1)
+
+    expect(logger).to have_received(:warn).with("ENV['NB_SLUG'] unset. Exiting.")
   end
 end
