@@ -48,6 +48,8 @@ bundle exec rerun -- rackup app/config.ru --port 3000
 
 This uses the [Rerun](https://github.com/alexch/rerun) gem to automatically restart the app when files change.
 
+Then view [http://localhost:3000](http://localhost:3000) in your browser.
+
 ### Development
 
 For the developer exercises, to run the tests:
