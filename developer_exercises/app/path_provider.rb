@@ -14,8 +14,11 @@ class PathProvider
     "#{base_url}/sites/#{slug}/pages/#{resource}?#{access_token}"
   end
 
-
   def delete(resource, id)
+    "#{base_url}/sites/#{slug}/pages/#{resource}/#{id}?#{access_token}"
+  end
+
+  def update(resource, id)
     "#{base_url}/sites/#{slug}/pages/#{resource}/#{id}?#{access_token}"
   end
 

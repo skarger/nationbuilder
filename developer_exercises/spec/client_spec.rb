@@ -19,6 +19,10 @@ describe Client do
       def delete(resource, id)
         @path
       end
+
+      def update(resource, id)
+        @path
+      end
     end
   end
 
@@ -85,6 +89,26 @@ describe Client do
       client = Client.delete(path_provider: path_provider, resource: resource, id: id)
 
       expect(a_request(:delete, delete_path)).to have_been_made.once
+    end
+  end
+
+  describe ".update" do
+    let(:id) { 123 }
+    let(:update_path) { "https://www.example.com/tests/#{id}" }
+
+    it "takes a path provider, resource, id, and payload" do
+      stub_request(:put, update_path)
+
+      path_provider = path_provider_klass.new(update_path)
+      payload = {
+        key: :value
+      }
+      client = Client.update(path_provider: path_provider,
+                             resource: resource,
+                             id: id,
+                             payload: payload)
+
+      expect(a_request(:put, update_path)).to have_been_made.once
     end
   end
 end

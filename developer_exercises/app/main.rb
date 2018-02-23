@@ -1,16 +1,11 @@
 require "logger"
 require "json"
 
+require_relative "./helpers.rb"
+Helpers.require_files
+
 CONFIGURATION_ERROR = 1
 REQUEST_FAILED = 2
-
-app_directory = File.dirname(File.expand_path(__FILE__))
-Dir.chdir(app_directory)
-Dir.glob("*rb") do |file|
-  unless file == "main.rb"
-    require_relative file
-  end
-end
 
 def main(logger: Logger.new($stderr))
   logger.info("NationBuilder Developer Exercises: Starting")

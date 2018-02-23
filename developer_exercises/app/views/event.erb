@@ -1,0 +1,29 @@
+<style>
+  div {
+    padding: 3px;
+  }
+</style>
+
+<h1>Edit Event</h1>
+
+<form action="/event" method="post">
+  <div>
+    ID: <%= id %>
+  </div>
+
+  <div>
+    <input type="hidden" name="event[id]" value="<%= id %>">
+  </div>
+
+  <div>
+    Name: <input type="text" name="event[name]" value="<%= name %>">
+  </div>
+
+  <div>
+    Name: <input type="text" name="event[intro]" value="<%= intro %>">
+  </div>
+
+  <div>
+    <input type="submit">
+  </div>
+</form>

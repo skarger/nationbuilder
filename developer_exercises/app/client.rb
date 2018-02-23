@@ -26,4 +26,13 @@ module Client
       req.headers['Accept'] = 'application/json'
     end
   end
+
+  module_function
+  def update(path_provider:, resource:, id:, payload:)
+    conn = Faraday.new(url: path_provider.update(resource, id))
+    conn.put do |req|
+      req.headers['Content-Type'] = 'application/json'
+      req.body = JSON.generate(payload)
+    end
+  end
 end
