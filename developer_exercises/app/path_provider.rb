@@ -7,12 +7,25 @@ class PathProvider
   attr_reader :slug, :api_token
 
   def index(resource)
-    "https://#{slug}.nationbuilder.com/api/v1/sites/#{slug}/pages/#{resource}?" \
-    "access_token=#{api_token}"
+    "#{base_url}/sites/#{slug}/pages/#{resource}?#{access_token}"
   end
 
   def create(resource)
-    "https://#{slug}.nationbuilder.com/api/v1/sites/#{slug}/pages/#{resource}?" \
+    "#{base_url}/sites/#{slug}/pages/#{resource}?#{access_token}"
+  end
+
+
+  def delete(resource, id)
+    "#{base_url}/sites/#{slug}/pages/#{resource}/#{id}?#{access_token}"
+  end
+
+  private
+
+  def base_url
+    "https://#{slug}.nationbuilder.com/api/v1"
+  end
+
+  def access_token
     "access_token=#{api_token}"
   end
 end

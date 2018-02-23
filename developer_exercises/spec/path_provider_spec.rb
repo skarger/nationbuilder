@@ -33,4 +33,16 @@ describe PathProvider do
       end
     end
   end
+
+  describe "#delete" do
+    describe "events" do
+      it "returns the expected URL" do
+        id = 99
+        expect(path_provider.delete(:events, id)).to eq(
+          "https://#{slug}.nationbuilder.com/api/v1/sites/#{slug}/pages/events/#{id}?" \
+          "access_token=#{api_token}"
+        )
+      end
+    end
+  end
 end
