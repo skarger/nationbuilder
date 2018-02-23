@@ -1,6 +1,8 @@
 require "logger"
 require "json"
 
+CONFIGURATION_ERROR = 1
+REQUEST_FAILED = 2
 
 app_directory = File.dirname(File.expand_path(__FILE__))
 Dir.chdir(app_directory)
@@ -15,10 +17,10 @@ def main(logger: Logger.new($stderr))
 
   if ENV['NB_API_TOKEN'].to_s.empty?
     logger.warn("ENV['NB_API_TOKEN'] unset. Exiting.")
-    1
+    CONFIGURATION_ERROR
   elsif ENV['NB_SLUG'].to_s.empty?
     logger.warn("ENV['NB_SLUG'] unset. Exiting.")
-    1
+    CONFIGURATION_ERROR
   else
     path_provider = PathProvider.new(slug: ENV['NB_SLUG'], api_token: ENV['NB_API_TOKEN'])
     if run_live_program?
@@ -60,7 +62,7 @@ end
 def report_failed_request_and_exit(logger)
   logger.warn("Request failed: #{response.status}")
   logger.warn(response.body)
-  exit 2
+  exit REQUEST_FAILED
 end
 
 def get_events(path_provider)
