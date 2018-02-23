@@ -24,11 +24,29 @@ cd developer_exercises
 bundle install
 ```
 
+First there is a non-interactive script, `app/main.rb`, that makes requests to the NationBuilder API.
+
 The program expects to find `ENV["NB_API_TOKEN"]` and `ENV["NB_SLUG"]` in order to authenticate. You can add them to the environment on startup:
 
 ```
 NB_API_TOKEN=<token> NB_SLUG=<slug> ruby developer_exercises/app/main.rb
 ```
+
+Then there is a web app used to connect user input to the API.
+
+To run the web app without code reloading:
+
+```
+rackup app/config.ru --port 3000
+```
+
+To run it with code reloading:
+
+```
+bundle exec rerun -- rackup app/config.ru --port 3000
+```
+
+This uses the [Rerun](https://github.com/alexch/rerun) gem to automatically restart the app when files change.
 
 ### Development
 
