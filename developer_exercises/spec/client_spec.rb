@@ -35,7 +35,10 @@ describe Client do
       path_provider = path_provider_klass.new(index_path)
       client = Client.index(path_provider: path_provider, resource: resource)
 
-      expect(a_request(:get, index_path)).to have_been_made.once
+      expect(a_request(:get, index_path).with(
+        headers: {
+          "Accept" => "application/json"
+        })).to have_been_made.once
     end
   end
 
@@ -73,7 +76,10 @@ describe Client do
 
       expect(a_request(:post, create_path).with(
         body: JSON.generate(expected_payload),
-        headers: { "Content-Type" => "application/json" }
+        headers: {
+          "Accept" => "application/json",
+          "Content-Type" => "application/json"
+        }
       )).to have_been_made.once
     end
   end
@@ -88,7 +94,10 @@ describe Client do
       path_provider = path_provider_klass.new(delete_path)
       client = Client.delete(path_provider: path_provider, resource: resource, id: id)
 
-      expect(a_request(:delete, delete_path)).to have_been_made.once
+      expect(a_request(:delete, delete_path).with(
+        headers: {
+          "Accept" => "application/json"
+        })).to have_been_made.once
     end
   end
 
@@ -108,7 +117,12 @@ describe Client do
                              id: id,
                              payload: payload)
 
-      expect(a_request(:put, update_path)).to have_been_made.once
+      expect(a_request(:put, update_path).with(
+        headers: {
+          "Accept" => "application/json",
+          "Content-Type" => "application/json"
+        }
+      )).to have_been_made.once
     end
   end
 end

@@ -7,13 +7,9 @@ Helpers.require_files
 class App < Roda
   plugin :render, views: "views"
 
-  def event(response)
-    data = JSON.parse(response.body)
+  def event(event_index_response)
+    data = JSON.parse(event_index_response.body)
     data["results"].first
-  end
-
-  def event_id_name(event)
-    [event["id"], event["name"]]
   end
 
   route do |r|
@@ -44,14 +40,11 @@ class App < Roda
 
         # POST /event request
         r.post do
-          params = r.params
-          puts params
           # just for this demo we're trusting the input from the client as-is
-          event_id = params["event"]["id"]
           response = Client.update(path_provider: @path_provider,
                                    resource: :events,
-                                   id: event_id,
-                                   payload: params)
+                                   id: r.params["event"]["id"],
+                                   payload: r.params)
 
           r.redirect
         end

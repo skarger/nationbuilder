@@ -1,12 +1,11 @@
 require 'faraday'
 
 module Client
-
   module_function
   def index(path_provider:, resource:)
     conn = Faraday.new(url: path_provider.index(resource))
     conn.get do |req|
-      req.headers['Accept'] = 'application/json'
+      req = set_headers(req)
     end
   end
 
@@ -14,7 +13,7 @@ module Client
   def create(path_provider:, resource:, payload: {})
     conn = Faraday.new(url: path_provider.create(resource))
     conn.post do |req|
-      req.headers['Content-Type'] = 'application/json'
+      req = set_headers(req)
       req.body = JSON.generate(payload)
     end
   end
@@ -23,7 +22,7 @@ module Client
   def delete(path_provider:, resource:, id:)
     conn = Faraday.new(url: path_provider.delete(resource, id))
     conn.delete do |req|
-      req.headers['Accept'] = 'application/json'
+      req = set_headers(req)
     end
   end
 
@@ -31,8 +30,14 @@ module Client
   def update(path_provider:, resource:, id:, payload:)
     conn = Faraday.new(url: path_provider.update(resource, id))
     conn.put do |req|
-      req.headers['Content-Type'] = 'application/json'
+      req = set_headers(req)
       req.body = JSON.generate(payload)
     end
+  end
+
+  def set_headers(req)
+    req.headers['Accept'] = 'application/json'
+    req.headers['Content-Type'] = 'application/json'
+    req
   end
 end
