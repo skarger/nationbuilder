@@ -8,6 +8,10 @@ describe Client do
         @path = path
       end
 
+      def index(resource)
+        @path
+      end
+
       def create(resource)
         @path
       end
@@ -18,8 +22,21 @@ describe Client do
     end
   end
 
+  describe ".index" do
+    let(:index_path) { "https://www.example.com/tests" }
+
+    it "takes a path provider and a resource" do
+      stub_request(:get, index_path)
+
+      path_provider = path_provider_klass.new(index_path)
+      client = Client.index(path_provider: path_provider, resource: resource)
+
+      expect(a_request(:get, index_path)).to have_been_made.once
+    end
+  end
+
   describe ".create" do
-    let(:create_path) { "https://www.example.com/test_create" }
+    let(:create_path) { "https://www.example.com/tests" }
 
     it "takes a path provider and a resource" do
       stub_request(:post, create_path)
@@ -59,7 +76,7 @@ describe Client do
 
   describe ".delete" do
     let(:id) { 123 }
-    let(:delete_path) { "https://www.example.com/test_create/#{id}" }
+    let(:delete_path) { "https://www.example.com/tests/#{id}" }
 
     it "takes a path provider, resource, and id" do
       stub_request(:delete, delete_path)
