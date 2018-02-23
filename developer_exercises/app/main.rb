@@ -15,42 +15,30 @@ end
 def main(logger: Logger.new($stderr))
   logger.info("NationBuilder Developer Exercises: Starting")
 
-  if ENV['NB_API_TOKEN'].to_s.empty?
-    logger.warn("ENV['NB_API_TOKEN'] unset. Exiting.")
-    CONFIGURATION_ERROR
-  elsif ENV['NB_SLUG'].to_s.empty?
-    logger.warn("ENV['NB_SLUG'] unset. Exiting.")
-    CONFIGURATION_ERROR
-  else
+  report_configuration_error_and_exit(logger) if environment_invalid?
+
+  if run_live_program?
     path_provider = PathProvider.new(slug: ENV['NB_SLUG'], api_token: ENV['NB_API_TOKEN'])
-    if run_live_program?
-      logger.info("Fetching existing events")
-      response = get_events(path_provider)
-      if response.status != 200
-        report_failed_request_and_exit(logger)
-      end
+    logger.info("Fetching existing events")
+    response = get_events(path_provider)
+    report_failed_request_and_exit(logger) unless response.status == 200
 
-      logger.info("Deleting existing events")
-      event_ids_names(response).each do |id, name|
-        logger.info("Deleting event #{id}: #{name}")
-        response = delete_event(path_provider, id)
-        if response.status != 204
-          report_failed_request_and_exit(logger)
-        end
-      end
-
-      logger.info("Creating event")
-      response = create_event(path_provider)
-      if response.status != 200
-        report_failed_request_and_exit(logger)
-      else
-        event_id, event_name = event_id_name(JSON.parse(response.body)["event"])
-        logger.info("Created event #{event_id}: #{event_name}")
-      end
+    logger.info("Deleting existing events")
+    event_ids_names(response).each do |id, name|
+      logger.info("Deleting event #{id}: #{name}")
+      response = delete_event(path_provider, id)
+      report_failed_request_and_exit(logger) unless response.status == 204
     end
 
-    0
+    logger.info("Creating event")
+    response = create_event(path_provider)
+    report_failed_request_and_exit(logger) unless response.status == 200
+
+    event_id, event_name = event_id_name(JSON.parse(response.body)["event"])
+    logger.info("Created event #{event_id}: #{event_name}")
   end
+
+  0
 ensure
   logger.info("NationBuilder Developer Exercises: Finished")
 end
@@ -63,6 +51,19 @@ def report_failed_request_and_exit(logger)
   logger.warn("Request failed: #{response.status}")
   logger.warn(response.body)
   exit REQUEST_FAILED
+end
+
+def environment_invalid?
+  ENV['NB_API_TOKEN'].to_s.empty? || ENV['NB_SLUG'].to_s.empty?
+end
+
+def report_configuration_error_and_exit(logger)
+  if ENV['NB_API_TOKEN'].to_s.empty?
+    logger.warn("ENV['NB_API_TOKEN'] unset. Exiting.")
+  elsif ENV['NB_SLUG'].to_s.empty?
+    logger.warn("ENV['NB_SLUG'] unset. Exiting.")
+  end
+  exit CONFIGURATION_ERROR
 end
 
 def get_events(path_provider)
