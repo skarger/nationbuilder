@@ -40,7 +40,7 @@ Ensure you are in the correct directory:
 
 ```
 cd developer_exercises
-``
+```
 
 To run the web app without code reloading:
 
