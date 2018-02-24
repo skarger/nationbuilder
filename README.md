@@ -36,6 +36,12 @@ NB_API_TOKEN=<token> NB_SLUG=<slug> ruby developer_exercises/app/main.rb
 
 Then there is a web app used to connect user input to the API. You can view it locally at [http://localhost:3000](http://localhost:3000) after starting it up as described below.
 
+Ensure you are in the correct directory:
+
+```
+cd developer_exercises
+``
+
 To run the web app without code reloading:
 
 ```

@@ -2,7 +2,8 @@ require "roda"
 require "json"
 
 require_relative "./helpers.rb"
-Helpers.require_files
+include Helpers
+require_files
 
 class App < Roda
   plugin :render, views: "views"
