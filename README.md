@@ -12,7 +12,9 @@ I do this in the developer_excercises directory.
 
 #### Prerequisites
 
-You must have a Nation with Developer features enabled and a test API token.
+* You must have a Nation with Developer features enabled and a test API token.
+* You must have Ruby and Bundler installed.
+
 
 #### Setup
 
@@ -37,13 +39,13 @@ Then there is a web app used to connect user input to the API. You can view it l
 To run the web app without code reloading:
 
 ```
-rackup app/config.ru --port 3000
+NB_API_TOKEN=<token> NB_SLUG=<slug> rackup app/config.ru --port 3000
 ```
 
 To run it with code reloading:
 
 ```
-bundle exec rerun -- rackup app/config.ru --port 3000
+NB_API_TOKEN=<token> NB_SLUG=<slug> bundle exec rerun -- rackup app/config.ru --port 3000
 ```
 
 This uses the [Rerun](https://github.com/alexch/rerun) gem to automatically restart the app when files change.
