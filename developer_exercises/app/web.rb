@@ -6,6 +6,7 @@ include Helpers
 require_files
 
 class App < Roda
+  include NBConfiguration
   plugin :render, views: "views"
 
   def event(event_index_response)
@@ -15,11 +16,15 @@ class App < Roda
 
   route do |r|
     # NationBuilder API URL provider
-    @path_provider = PathProvider.new(slug: ENV['NB_SLUG'],
-                                      api_token: ENV['NB_API_TOKEN'])
+    @path_provider = PathProvider.new(slug: nb_slug,
+                                      api_token: nb_api_token)
     # GET / request
     r.root do
-      r.redirect "/event"
+      if !nb_configuration_valid?
+        "Configuration missing: NB_API_TOKEN and NB_SLUG must be set in ENV."
+      else
+        r.redirect "/event"
+      end
     end
 
     r.on "event" do
