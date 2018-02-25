@@ -27,7 +27,7 @@ describe "main" do
 
     expect(main(logger: logger)).to eq(1)
 
-    expect(logger).to have_received(:warn).with("ENV['NB_API_TOKEN'] unset. Exiting.")
+    expect(logger).to have_received(:warn).with("ENV['NB_API_TOKEN'] unset.")
   end
 
   it "errors out if no nation slug set" do
@@ -38,6 +38,6 @@ describe "main" do
 
     expect(main(logger: logger)).to eq(1)
 
-    expect(logger).to have_received(:warn).with("ENV['NB_SLUG'] unset. Exiting.")
+    expect(logger).to have_received(:warn).with("ENV['NB_SLUG'] unset.")
   end
 end

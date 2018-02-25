@@ -5,6 +5,8 @@ require_relative "./helpers.rb"
 include Helpers
 require_files
 
+include NBConfiguration
+
 SUCCESS = 0
 CONFIGURATION_ERROR = 1
 REQUEST_FAILED = 2
@@ -12,14 +14,14 @@ REQUEST_FAILED = 2
 def main(logger: Logger.new($stderr))
   logger.info("NationBuilder Developer Exercises: Starting")
 
-  if environment_invalid?
-    log_configuration_error(logger)
+  if !nb_configuration_valid?
+    log_nb_configuration_error(logger)
     return CONFIGURATION_ERROR
   end
 
   if run_live_program?
-    path_provider = PathProvider.new(slug: ENV['NB_SLUG'],
-                                     api_token: ENV['NB_API_TOKEN'])
+    path_provider = PathProvider.new(slug: nb_slug,
+                                     api_token: nb_api_token)
 
     logger.info("Fetching existing events")
     response = Client.index(path_provider: path_provider, resource: :events)
@@ -65,18 +67,6 @@ end
 def log_failed_request(logger)
   logger.warn("Request failed: #{response.status}")
   logger.warn(response.body)
-end
-
-def environment_invalid?
-  ENV['NB_API_TOKEN'].to_s.empty? || ENV['NB_SLUG'].to_s.empty?
-end
-
-def log_configuration_error(logger)
-  if ENV['NB_API_TOKEN'].to_s.empty?
-    logger.warn("ENV['NB_API_TOKEN'] unset. Exiting.")
-  elsif ENV['NB_SLUG'].to_s.empty?
-    logger.warn("ENV['NB_SLUG'] unset. Exiting.")
-  end
 end
 
 def event_ids_names(response)
