@@ -11,15 +11,27 @@ class PathProvider
   end
 
   def create(resource)
-    "#{base_url}/sites/#{slug}/pages/#{resource}?#{access_token}"
+    if resource == :events
+      "#{base_url}/sites/#{slug}/pages/#{resource}?#{access_token}"
+    else
+      "#{base_url}/#{resource}?#{access_token}"
+    end
   end
 
   def delete(resource, id)
-    "#{base_url}/sites/#{slug}/pages/#{resource}/#{id}?#{access_token}"
+    if resource == :events
+      "#{base_url}/sites/#{slug}/pages/#{resource}/#{id}?#{access_token}"
+    else
+      "#{base_url}/#{resource}/#{id}?#{access_token}"
+    end
   end
 
   def update(resource, id)
+    if resource == :events
     "#{base_url}/sites/#{slug}/pages/#{resource}/#{id}?#{access_token}"
+    else
+      "#{base_url}/#{resource}/#{id}?#{access_token}"
+    end
   end
 
   private
