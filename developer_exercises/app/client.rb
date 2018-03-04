@@ -36,8 +36,8 @@ module Client
   end
 
   module_function
-  def search(path_provider:, resource:, parameters:)
-    conn = Faraday.new(url: path_provider.search(resource, parameters))
+  def match(path_provider:, resource:, parameters:)
+    conn = Faraday.new(url: path_provider.match(resource, parameters))
     conn.get do |req|
       req = set_headers(req)
     end

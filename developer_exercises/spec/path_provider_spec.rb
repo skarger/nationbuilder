@@ -87,7 +87,7 @@ describe PathProvider do
     end
   end
 
-  describe "#search" do
+  describe "#match" do
     describe "people" do
       it "returns the expected URL" do
         first_name = 'First Name'
@@ -96,8 +96,8 @@ describe PathProvider do
           first_name: first_name,
           last_name: last_name
         }
-        expect(path_provider.search(:people, parameters)).to eq(
-          "https://#{slug}.nationbuilder.com/api/v1/people/search?" \
+        expect(path_provider.match(:people, parameters)).to eq(
+          "https://#{slug}.nationbuilder.com/api/v1/people/match?" \
           "first_name=First+Name&last_name=Last+Name" \
           "&access_token=#{api_token}"
         )
