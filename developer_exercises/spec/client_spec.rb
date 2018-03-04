@@ -23,6 +23,10 @@ describe Client do
       def update(resource, id)
         @path
       end
+
+      def search(resource, parameters)
+        @path
+      end
     end
   end
 
@@ -118,6 +122,26 @@ describe Client do
                              payload: payload)
 
       expect(a_request(:put, update_path).with(
+        headers: {
+          "Accept" => "application/json",
+          "Content-Type" => "application/json"
+        }
+      )).to have_been_made.once
+    end
+  end
+
+  describe ".search" do
+    let(:parameters) { { email: 'dog@canines.org', city: 'Dog Town' } }
+    let(:search_path) { "https://www.example.com/tests/search?email=dog%40canines.org&city=Dog+Town" }
+
+    it "takes a path provider, resource, id, and payload" do
+      stub_request(:get, search_path)
+
+      path_provider = path_provider_klass.new(search_path)
+      client = Client.search(path_provider: path_provider,
+                             resource: resource,
+                             parameters: parameters)
+      expect(a_request(:get, search_path).with(
         headers: {
           "Accept" => "application/json",
           "Content-Type" => "application/json"

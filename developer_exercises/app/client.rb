@@ -35,6 +35,14 @@ module Client
     end
   end
 
+  module_function
+  def search(path_provider:, resource:, parameters:)
+    conn = Faraday.new(url: path_provider.search(resource, parameters))
+    conn.get do |req|
+      req = set_headers(req)
+    end
+  end
+
   def set_headers(req)
     req.headers['Accept'] = 'application/json'
     req.headers['Content-Type'] = 'application/json'
