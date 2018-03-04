@@ -94,9 +94,9 @@ end
 
 def create_update_delete_person_exercise(logger, path_provider)
   person = Person.new.payload['person']
-  full_name = "#{person['first_name']} #{person['last_name']}"
+  name = "#{person['first_name']} #{person['last_name']}"
 
-  logger.info("Attempting to match person '#{full_name}'")
+  logger.info("Attempting to match person '#{name}'")
   match_params = {
     first_name: person["first_name"],
     last_name: person["last_name"]
@@ -120,7 +120,7 @@ def create_update_delete_person_exercise(logger, path_provider)
     return REQUEST_FAILED
   end
 
-  logger.info("Creating person '#{full_name}'")
+  logger.info("Creating person '#{name}'")
   response = Client.create(path_provider: path_provider,
                            resource: :people,
                            payload: Person.new.payload)
@@ -131,6 +131,23 @@ def create_update_delete_person_exercise(logger, path_provider)
 
   id, name = person_id_name(response)
   logger.info("Created person #{id}: #{name}")
+
+  logger.info("Updating person '#{name}' to have occupation 'Entrepreneur'")
+  update_payload = {
+    person: {
+      occupation: 'Entrepreneur',
+      employer: nil
+    }
+  }
+  response = Client.update(path_provider: path_provider,
+                           resource: :people,
+                           id: id,
+                           payload: update_payload)
+  unless response.status == 200
+    log_failed_request(logger, response)
+    return REQUEST_FAILED
+  end
+  logger.info("Updated person '#{name}'")
 
   logger.info("Deleting person #{id}: #{name}")
   delete_person(logger, path_provider, id)
