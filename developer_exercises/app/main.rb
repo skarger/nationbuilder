@@ -43,7 +43,7 @@ def run_live_program?
   $PROGRAM_NAME == __FILE__
 end
 
-def log_failed_request(logger)
+def log_failed_request(logger, response)
   logger.warn("Request failed: #{response.status}")
   logger.warn(response.body)
 end
@@ -52,7 +52,7 @@ def create_event_exercise(logger, path_provider)
   logger.info("Fetching existing events")
   response = Client.index(path_provider: path_provider, resource: :events)
   unless response.status == 200
-    log_failed_request(logger)
+    log_failed_request(logger, response)
     return REQUEST_FAILED
   end
 
@@ -63,7 +63,7 @@ def create_event_exercise(logger, path_provider)
                              resource: :events,
                              id: id)
     unless response.status == 204
-      log_failed_request(logger)
+      log_failed_request(logger, response)
       return REQUEST_FAILED
     end
   end
@@ -73,7 +73,7 @@ def create_event_exercise(logger, path_provider)
                            resource: :events,
                            payload: Event.new.payload)
   unless response.status == 200
-    log_failed_request(logger)
+    log_failed_request(logger, response)
     return REQUEST_FAILED
   end
 
@@ -93,6 +93,30 @@ end
 
 
 def create_update_delete_person_exercise(logger, path_provider)
+  logger.info("Creating person")
+  response = Client.create(path_provider: path_provider,
+                           resource: :people,
+                           payload: Person.new.payload)
+  unless response.status == 201
+    log_failed_request(logger, response)
+    return REQUEST_FAILED
+  end
+
+  id = JSON.parse(response.body)["person"]["id"]
+  name = JSON.parse(response.body)["person"]["first_name"]
+
+  logger.info("Created person #{id}: #{name}")
+
+  logger.info("Deleting person #{id}: #{name}")
+  response = Client.delete(path_provider: path_provider,
+                           resource: :people,
+                           id: id)
+  unless response.status == 204
+    log_failed_request(logger, response)
+    return REQUEST_FAILED
+  end
+  logger.info("Deleted person #{id}: #{name}")
+
   SUCCESS
 end
 
