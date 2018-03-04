@@ -93,7 +93,34 @@ end
 
 
 def create_update_delete_person_exercise(logger, path_provider)
-  logger.info("Creating person")
+  person = Person.new.payload['person']
+  full_name = "#{person['first_name']} #{person['last_name']}"
+
+  logger.info("Attempting to match person '#{full_name}'")
+  match_params = {
+    first_name: person["first_name"],
+    last_name: person["last_name"]
+  }
+  response = Client.match(path_provider: path_provider,
+                          resource: :people,
+                          parameters: match_params)
+  case response.status
+  when 200
+    id, name = person_id_name(response)
+    logger.info("Found person #{id}: '#{name}'")
+    logger.info("Deleting person #{id}: #{name}")
+    delete_person(logger, path_provider, id)
+    logger.info("Deleted person #{id}: #{name}")
+  when 400
+    if JSON.parse(response.body)["code"] == "no_matches"
+      logger.info("No matches")
+    end
+  else
+    log_failed_request(logger, response)
+    return REQUEST_FAILED
+  end
+
+  logger.info("Creating person '#{full_name}'")
   response = Client.create(path_provider: path_provider,
                            resource: :people,
                            payload: Person.new.payload)
@@ -102,12 +129,24 @@ def create_update_delete_person_exercise(logger, path_provider)
     return REQUEST_FAILED
   end
 
-  id = JSON.parse(response.body)["person"]["id"]
-  name = JSON.parse(response.body)["person"]["first_name"]
-
+  id, name = person_id_name(response)
   logger.info("Created person #{id}: #{name}")
 
   logger.info("Deleting person #{id}: #{name}")
+  delete_person(logger, path_provider, id)
+  logger.info("Deleted person #{id}: #{name}")
+
+  SUCCESS
+end
+
+def person_id_name(response)
+  parsed = JSON.parse(response.body)
+  id = parsed["person"]["id"]
+  name = "#{parsed["person"]["first_name"]} #{parsed["person"]["last_name"]}"
+  [id, name]
+end
+
+def delete_person(logger, path_provider, id)
   response = Client.delete(path_provider: path_provider,
                            resource: :people,
                            id: id)
@@ -115,9 +154,6 @@ def create_update_delete_person_exercise(logger, path_provider)
     log_failed_request(logger, response)
     return REQUEST_FAILED
   end
-  logger.info("Deleted person #{id}: #{name}")
-
-  SUCCESS
 end
 
 if run_live_program?
