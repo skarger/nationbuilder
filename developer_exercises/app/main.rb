@@ -23,11 +23,15 @@ def main(logger: Logger.new($stderr))
     path_provider = PathProvider.new(slug: nb_slug,
                                      api_token: nb_api_token)
 
+    logger.info("Starting exercise 'Create an event'")
     event_result = create_event_exercise(logger, path_provider)
     return event_result unless event_result == SUCCESS
+    logger.info("Completed excercise 'Create an event'")
 
+    logger.info("Starting exercise 'Create, update, delete a person'")
     person_result = create_update_delete_person_exercise(logger, path_provider)
     return person_result unless person_result == SUCCESS
+    logger.info("Completed exercise 'Create, update, delete a person'")
   end
 
   SUCCESS
