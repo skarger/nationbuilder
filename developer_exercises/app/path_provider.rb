@@ -34,6 +34,14 @@ class PathProvider
     end
   end
 
+  def search(resource, parameters)
+    encoded_parameters = parameters.each_with_object([]) do |(key, val), list|
+      list << "#{CGI::escape(key.to_s)}=#{CGI::escape(val.to_s)}"
+    end
+    query_string = encoded_parameters.join("&")
+    "#{base_url}/#{resource}/search?#{query_string}&#{access_token}"
+  end
+
   private
 
   def base_url
