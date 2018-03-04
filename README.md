@@ -2,7 +2,7 @@
 
 NationBuilder related code.
 
-## Developer Excercises
+## Developer Exercises
 
 To become a NationBuilder certified developer you must complete a sample of their [developer exercises](http://nationbuilder.com/developer_exercises).
 
@@ -55,6 +55,23 @@ NB_API_TOKEN=<token> NB_SLUG=<slug> bundle exec rerun -- rackup app/config.ru --
 ```
 
 This uses the [Rerun](https://github.com/alexch/rerun) gem to automatically restart the app when files change.
+
+### Completed Exercises
+
+To date I have implemented two of their [developer exercises](http://nationbuilder.com/developer_exercises):
+
+#### Events
+* Create an event
+* Make a form that allows others to update that event
+
+#### People
+* Create a person
+* Update the person
+* Delete the person
+
+Creating the event is done by `main.rb` script. Then the web app provides a form to update the event.
+
+The `main.rb` script performs all the work to create, update, and delete a person.
 
 ### Development
 
