@@ -14,17 +14,27 @@ class App < Roda
     data["results"].first
   end
 
+  def logger
+    env["rack.logger"]
+  end
+
   route do |r|
     # NationBuilder API URL provider
     @path_provider = PathProvider.new(slug: nb_slug,
                                       api_token: nb_api_token)
+
+    r.on proc{true} do
+      if !nb_configuration_valid?
+        response.status = 500
+        message = "Configuration missing: NB_API_TOKEN and NB_SLUG must be set in ENV."
+        logger.info(message)
+        message
+      end
+    end
+
     # GET / request
     r.root do
-      if !nb_configuration_valid?
-        "Configuration missing: NB_API_TOKEN and NB_SLUG must be set in ENV."
-      else
-        r.redirect "/event"
-      end
+      r.redirect "/event"
     end
 
     r.on "event" do
