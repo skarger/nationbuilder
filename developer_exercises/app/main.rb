@@ -7,10 +7,6 @@ require_files
 
 include NBConfiguration
 
-SUCCESS = 0
-CONFIGURATION_ERROR = 1
-REQUEST_FAILED = 2
-
 def main(logger: Logger.new($stderr))
   logger.info("NationBuilder Developer Exercises: Starting")
 
